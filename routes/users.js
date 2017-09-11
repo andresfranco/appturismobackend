@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var authController = require('../controllers/authController');
+const authController = require ('../controllers/authController');
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  authController.getAllUsers(req, res, next);
+  var auth = new authController();
+  auth.getAllUsers(req, res, next);
 });
 
 module.exports = router;

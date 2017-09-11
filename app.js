@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var countries = require('./routes/countries');
 var passport = require("passport");
+var cors = require('cors');
 var app = express();
 
 
@@ -18,7 +19,7 @@ LocalStrategy = require('passport-local').Strategy;
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'pug');
-
+app.use(cors());
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 

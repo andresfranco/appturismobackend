@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Country= sequelize.define('Country', {
-    name: DataTypes.STRING,
+    name: {type:DataTypes.STRING, allowNull: false},
     phonecode: DataTypes.INTEGER
   }, {
     classMethods: {

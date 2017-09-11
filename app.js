@@ -8,13 +8,16 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var auth = require('./routes/auth');
+var admin =require('./routes/admin');
 var countries = require('./routes/countries');
 var passport = require("passport");
 var cors = require('cors');
 var app = express();
 
+ 
+require('./config/passport/passport.js')(passport);
 
-LocalStrategy = require('passport-local').Strategy;
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +30,11 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//Passport
+app.use(session({ secret: 'panama507',resave: true, saveUninitialized:true})); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -38,7 +46,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/countries', countries);
-
+app.use('/auth', auth);
+app.use('/admin', admin);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

@@ -17,7 +17,9 @@ router.get('/signin', function(req, res, next) {
   });
 
  router.post('/signin', passport.authenticate('local-signin', {
-    successRedirect: '/admin/dashboard',
-    failureRedirect: '/auth/signin'
-}));  
+    successRedirect: '/admin/dashboard'
+   // failureRedirect: '/auth/signin'
+}));
+
+
 module.exports = router;

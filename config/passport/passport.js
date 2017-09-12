@@ -24,7 +24,7 @@ module.exports = function(passport) {
                    email: email
                }
            }).then(function(user) {
-    
+                  
                if (!user) {
                    return done(null, false, {
                        message: 'Email does not exist'
@@ -65,16 +65,14 @@ module.exports = function(passport) {
            };
 
            User.findOne({
-               where: {
-                   email: email
-               }
+               where: {email: email}
            }).then(function(user) {
 
                if (user){
                    return done(null, false, {
                        message: 'That email is already taken'
                    });
-
+                    
                } else{
                    var userPassword = generateHash(password);
                    var data ={

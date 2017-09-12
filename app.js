@@ -16,7 +16,7 @@ var cors = require('cors');
 var app = express();
 
  
-require('./config/passport/passport.js')(passport);
+
 
 
 // view engine setup
@@ -34,6 +34,7 @@ app.use(bodyParser.json());
 app.use(session({ secret: 'panama507',resave: true, saveUninitialized:true})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
+require('./config/passport/passport.js')(passport);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

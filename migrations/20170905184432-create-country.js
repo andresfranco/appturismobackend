@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Countries', {
+    return queryInterface.createTable('countries', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,10 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       phonecode: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        isInt: true
       },
       createdAt: {
         allowNull: false,

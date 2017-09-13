@@ -10,13 +10,11 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var auth = require('./routes/auth');
 var admin =require('./routes/admin');
+var morgan = require('morgan');
 var countries = require('./routes/countries');
 var passport = require("passport");
 var cors = require('cors');
 var app = express();
-
- 
-require('./config/passport/passport.js')(passport);
 
 
 // view engine setup

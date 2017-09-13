@@ -1,86 +1,64 @@
 var models = require('../models/index');
 var generalController =require('../controllers/generalController');
-var Country = models.Country;
+var errorController =require('../controllers/errorController');
+var Country = models.country;
 var general =new generalController();
+var dbErrors =new errorController();
 
 class countryController{
 
-    constructor(){
-        this.valid =false; 
-        this.errorMessages=[];  
-        this.Errors={};
-    }
     getAll(req,res){
         Country.findAll({}).then(countries=>{ 
         res.json(countries);
         });
     }
     create(req,res){
-        this.Errors = this.validateParameters(req);
-        if(this.Errors.valid)
-        {
-            Country.create(req.body)
-            .then(country => {
-              country!==null?res.json(country):res.json({code:0,error:"Country not created"});
-            }).error(function(err){
-                 res.json(err);
-            });
-        }else{
-
-            res.json(this.Errors);
-        }
-        
+        Country.create(req.body)
+        .then(country => {
+            res.json(country);
+        }).catch(function(err){
+            res.json(dbErrors.getOrmError(err));
+        });
     }
 
     update(req,res){
         Country.findById(req.params.id)
-          .then(country => {
-            if (!country){res.json({code:0,error:"Country not found"})};
-            
-            this.Errors = this.validateParameters(req);
-            if(this.Errors.valid)
-                {
-                    country.updateAttributes(req.body);
-                    res.json(country);
-                }else{
-                    res.json(this.Errors);
+            .then(country => {
+                if(country){
+                    country.updateAttributes(req.body)
+                    .then(updatedCountry => {
+                        res.json(updatedCountry);
+                    }).catch(function(err){
+                        res.json(dbErrors.getOrmError(err));
+                    });
                 }
-
-          }).error(function(err){
-              res.json(err);
-          });
+                else{
+                  res.json({code:0,error:"Country not found"});
+                }
+            }).catch(function(err){
+                res.json(dbErrors.getOrmError(err));
+            });
     }
 
     delete(req,res){
         Country.destroy({  
             where:{id:req.params.id} 
           })
-          .then(deletedCountry => {
-            res.json({deleted:deletedCountry});
-          }).error(function(err){
-            res.json(err);
+          .then(deletedCountry => { 
+            res.json(dbErrors.getDeleteError(deletedCountry));
+          }).catch(function(err){
+            res.json(dbErrors.getOrmError(err));
         });
       
     }
     show(req,res){
-         Country.findById(req.params.id).then(country => {
+         Country.findById(req.params.id).then(country => {   
             country!==null?res.json(country):res.json({code:0,error:"Country not found"});
-          });
+        }).catch(function(err){
+            res.json(dbErrors.getOrmError(err));
+        });
     }
-
-    validateParameters(req){
-    this.valid =false; 
-    this.errorMessages=[];  
-    this.Errors={};    
-     var validParams={name:false,phonecode:false};
-     req.body.name?validParams.name=true:this.errorMessages.push({code:0,field:"name",error:"name fields is required"});
-     general.isPositiveInteger(req.body.phonecode)?validParams.phonecode=true:this.errorMessages.push({code:0,field:"phonecode",error:"phonecode has to be integer"});
-     this.valid =validParams.name && validParams.phonecode;
-     this.Errors={valid:this.valid,messages:this.errorMessages};
-     return this.Errors;
-    }
-
-    
+ 
 }
 module.exports = countryController;
 

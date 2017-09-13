@@ -11,7 +11,7 @@ class errorController{
                 ,errorMessage:"Internal Database error: Please contact your system administrator"};
                 break;
             default:
-            return error;
+            return {error:"Database error"};
         }
     }
     getDeleteError(deleteObj){

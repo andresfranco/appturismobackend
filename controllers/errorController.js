@@ -21,6 +21,19 @@ class errorController{
         }
         
     }
+
+    getPassportError(error)
+    { 
+        var defaultMessage ="Authentication Error";
+        switch(error.name) {
+            case 'AuthenticationError':
+                return {type:'authentication',status:error.status,message:error.message,customMessage:"You are not authorized, please check your credentials"};
+                break;
+            default:
+            error?defaultMessage=error.message:defaultMessage="Authentication Error"
+            return {error:defaultMessage};
+        }
+    }
          
 }
  

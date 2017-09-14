@@ -18,9 +18,6 @@ var app = express();
 
 
 // view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'pug');
-app.use(cors());
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
@@ -29,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Passport
-app.use(session({ secret: 'panama507',resave: true, saveUninitialized:true})); // session secret
+//app.use(session({ secret: 'panama507',resave: true, saveUninitialized:true})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 

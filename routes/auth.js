@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 const authController = require ('../controllers/authController');
 var models = require('../models/index');
+var passport = require('passport');
+require('../config/passport/passport')(passport);
+var jwt = require('jsonwebtoken');
 var User =models.user;
 var auth =new authController();
 

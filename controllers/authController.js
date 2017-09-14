@@ -2,12 +2,10 @@
 var models = require('../models/index');
 var bcrypt = require('bcrypt');
 var errorController =require('../controllers/errorController');
-var passport = require("passport");
-require('../config/passport/passport')(passport);
 var jwt = require('jsonwebtoken');
 var dbErrors =new errorController();
 var User =models.user;
-var configData ={secret:'picorodaimaku'}
+var config =require('../config/passport/config');
 class authController{
     getAllUsers (req,res,next){
         models.user.findAll({attributes: ['name','email']}).then(function(users){ 
@@ -28,21 +26,22 @@ class authController{
     }
     
     signin (req,res) {
+        
         User.findOne({where:{email:req.body.email}}).then(user => {  
             if (user){
-             var validPassword =this.checkValidPassword(req.body.password,user.password);   
+             var validPassword =this.checkValidPassword(req.body.password,user.dataValues.password);   
              if(validPassword){
-               var token = jwt.sign(user,configData.secret);
+               var token = jwt.sign(user.dataValues,config.secret);
                res.json({success: true, token: 'JWT ' + token});
              }else{
-                res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+                res.json({success: false, msg: 'Authentication failed. Wrong password.'});
              } 
             }else{
                 res.json({code:0,error:"Authentication failed: Email not found"});
             }
             
         }).catch(function(err){
-            res.json(dbErrors.getOrmError(err));
+           res.json(dbErrors.getOrmError(err));
         });
     }
 
@@ -55,6 +54,13 @@ class authController{
     checkValidPassword(password,hashPassword){
          return bcrypt.compareSync(password,hashPassword);
     }
+
+    getToken(req) {
+        var token = null;
+        if (req.headers){ token = req.headers.authorization;}
+        return token;
+      }
+
 
 
 }
